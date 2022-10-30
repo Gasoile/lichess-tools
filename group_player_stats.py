@@ -124,15 +124,20 @@ def export_ratings(ratings_json,format):
                     data.extend([""]*len(header_generic))
             csv_writer.writerow(data)
 
-if len(sys.argv) < 2:
+def print_usage():
     print('Usage: team_player_stats team-id [OPTIONS]')
     print('OPTIONS:')
     print('\t-p \t\t- print ratings to screen')
     print('\t-e [format]\t- export ratings to file in format csv or json')
-    exit()
 
-print_r="-p" in sys.argv
+if len(sys.argv) < 2:
+    print_usage()
+    exit()
+if "-h" in sys.argv or "--help" in sys.argv:
+    print_usage()
+
 export_r="-e" in sys.argv
+print_r="-p" in sys.argv or not export_r
 
 team_id=sys.argv[1]
 team_members = requests.get(url="https://lichess.org/api/team/"+team_id+"/users")
