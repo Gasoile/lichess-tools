@@ -18,8 +18,6 @@ def get_ratings(players_list):
     ratings['Super Champions']=[]
     ratings['Standard Champions']=[]
     ratings['Weird Champios']=[]
-    players_nr=len(players_list)
-    ids = list(range(0,players_nr,1))
     std_modes_cntr=0
     game_modes = []
     for player in players_list:
@@ -42,7 +40,7 @@ def get_ratings(players_list):
             # print(player['perfs'][i])
             if not 'games' in player['perfs'][i]:
                 continue
-            if i=='bullet' or i=='blitz' or i=='rapid' or i=='classical' or i=='correspondence' or i=='puzzle':
+            if i=='ultraBullet' or i=='bullet' or i=='blitz' or i=='rapid' or i=='classical' or i=='correspondence' or i=='puzzle':
                 standard_games_cnt+=player['perfs'][i]['games']
                 standard_avg+=player['perfs'][i]['rating']
             else:
