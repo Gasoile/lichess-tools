@@ -14,87 +14,60 @@ def ratings2list(ratings):
     return r
 
 def get_ratings(players_list):
-    bullet=[]
-    blitz=[]
-    rapid=[]
-    classical=[]
-    correspondence=[]
-    puzzle=[]
-    horde=[]
-    antichess=[]
-    atomic=[]
-    racingKings=[]
-    crazyhouse=[]
-    kingOfTheHill=[]
-    threeCheck=[]
+    ratings={}
+    ratings['Super Champions']=[]
+    ratings['Standard Champions']=[]
+    ratings['Weird Champios']=[]
     players_nr=len(players_list)
     ids = list(range(0,players_nr,1))
+    std_modes_cntr=0
+    game_modes = []
     for player in players_list:
-        player_perfs=player['perfs']
-        # print('Player: ',player)
-        if 'bullet' in player_perfs:
-            bullet.append({"username":player['username'], "rating":player_perfs['bullet']['rating'], "games":player_perfs['bullet']['games']})
-        if 'blitz' in player_perfs:
-            blitz.append({"username":player['username'], "rating":player_perfs['blitz']['rating'], "games":player_perfs['blitz']['games']})
-        if 'rapid' in player_perfs:
-            rapid.append({"username":player['username'], "rating":player_perfs['rapid']['rating'], "games":player_perfs['rapid']['games']})
-        if 'classical' in player_perfs:
-            classical.append({"username":player['username'], "rating":player_perfs['classical']['rating'], "games":player_perfs['classical']['games']})
-        if 'correspondence' in player_perfs:
-            correspondence.append({"username":player['username'], "rating":player_perfs['correspondence']['rating'], "games":player_perfs['correspondence']['games']})
-        if 'puzzle' in player_perfs:
-            puzzle.append({"username":player['username'], "rating":player_perfs['puzzle']['rating'], "games":player_perfs['puzzle']['games']})
-        if 'horde' in player_perfs:
-            horde.append({"username":player['username'], "rating":player_perfs['horde']['rating'], "games":player_perfs['horde']['games']})
-        if 'antichess' in player_perfs:
-            antichess.append({"username":player['username'], "rating":player_perfs['antichess']['rating'], "games":player_perfs['antichess']['games']})
-        if 'atomic' in player_perfs:
-            atomic.append({"username":player['username'], "rating":player_perfs['atomic']['rating'], "games":player_perfs['atomic']['games']})
-        if 'racingKings' in player_perfs:
-            racingKings.append({"username":player['username'], "rating":player_perfs['racingKings']['rating'], "games":player_perfs['racingKings']['games']})
-        if 'kingOfTheHill' in player_perfs:
-            kingOfTheHill.append({"username":player['username'], "rating":player_perfs['kingOfTheHill']['rating'], "games":player_perfs['kingOfTheHill']['games']})
-        if 'crazyhouse' in player_perfs:
-            crazyhouse.append({"username":player['username'], "rating":player_perfs['crazyhouse']['rating'], "games":player_perfs['crazyhouse']['games']})
-        if 'threeCheck' in player_perfs:
-            threeCheck.append({"username":player['username'], "rating":player_perfs['threeCheck']['rating'], "games":player_perfs['threeCheck']['games']})
+        for i in player['perfs'].keys():
+            if not i in game_modes:
+                game_modes.append(i)
+                if i=='ultraBullet' or i=='bullet' or i=='blitz' or i=='rapid' or i=='classical' or i=='correspondence' or i=='puzzle':
+                    std_modes_cntr+=1
+    all_modes_cntr=len(game_modes)
+    weird_modes_cntr=all_modes_cntr-std_modes_cntr
+    for player in players_list:
+        standard_avg=0
+        weird_avg=0
+        all_avg=0
+        standard_games_cnt=0
+        weird_games_cnt=0
+        all_games_cnt=0
+        for i in player['perfs'].keys():
+            # print(i)
+            # print(player['perfs'][i])
+            if not 'games' in player['perfs'][i]:
+                continue
+            if i=='bullet' or i=='blitz' or i=='rapid' or i=='classical' or i=='correspondence' or i=='puzzle':
+                standard_games_cnt+=player['perfs'][i]['games']
+                standard_avg+=player['perfs'][i]['rating']
+            else:
+                weird_games_cnt+=player['perfs'][i]['games']
+                weird_avg+=player['perfs'][i]['rating']
+            all_games_cnt+=player['perfs'][i]['games']
+            all_avg+=player['perfs'][i]['rating']
+            if not i in ratings:
+                ratings[i]=[]
+            ratings[i].append({"username":player['username'], "rating":player['perfs'][i]['rating'], "games":player['perfs'][i]['games']})
+        weird_avg/=weird_modes_cntr
+        standard_avg/=std_modes_cntr
+        all_avg/=all_modes_cntr
+        ratings['Super Champions'].append({"username":player['username'], "rating": all_avg, "games": all_games_cnt})
+        ratings['Standard Champions'].append({"username":player['username'], "rating": standard_avg, "games": standard_games_cnt})
+        ratings['Weird Champios'].append({"username":player['username'], "rating": weird_avg, "games": weird_games_cnt})
 
-    bullet = sorted(bullet, key=lambda k: k['rating'], reverse=True)
-    blitz = sorted(blitz, key=lambda k: k['rating'], reverse=True)
-    rapid = sorted(rapid, key=lambda k: k['rating'], reverse=True)
-    classical = sorted(classical, key=lambda k: k['rating'], reverse=True)
-    correspondence = sorted(correspondence, key=lambda k: k['rating'], reverse=True)
-    puzzle = sorted(puzzle, key=lambda k: k['rating'], reverse=True)
-    horde = sorted(horde, key=lambda k: k['rating'], reverse=True)
-    antichess = sorted(antichess, key=lambda k: k['rating'], reverse=True)
-    atomic = sorted(atomic, key=lambda k: k['rating'], reverse=True)
-    racingKings = sorted(racingKings, key=lambda k: k['rating'], reverse=True)
-    kingOfTheHill = sorted(kingOfTheHill, key=lambda k: k['rating'], reverse=True)
-    crazyhouse = sorted(crazyhouse, key=lambda k: k['rating'], reverse=True)
-    threeCheck = sorted(threeCheck, key=lambda k: k['rating'], reverse=True)
+    for i in ratings.keys(): ratings[i] = sorted(ratings[i], key=lambda k: k['rating'], reverse=True)
+    for i in ratings.keys(): ratings[i] = ratings2list(ratings[i])
 
-    bullet = ratings2list(bullet)
-    blitz = ratings2list(blitz)
-    rapid = ratings2list(rapid)
-    classical = ratings2list(classical)
-    correspondence = ratings2list(correspondence)
-    puzzle = ratings2list(puzzle)
-    horde = ratings2list(horde)
-    antichess = ratings2list(antichess)
-    atomic = ratings2list(atomic)
-    racingKings = ratings2list(racingKings)
-    kingOfTheHill = ratings2list(kingOfTheHill)
-    crazyhouse = ratings2list(crazyhouse)
-    threeCheck = ratings2list(threeCheck)
-
-    return {"bullet": bullet,"blitz": blitz,"rapid": rapid,"classical": classical,
-            "correspondence": correspondence,"puzzle": puzzle,"horde": horde,
-            "antichess": antichess,"atomic": atomic,"racingKings": racingKings,
-            "kingOfTheHill": kingOfTheHill,"crazyhouse": crazyhouse,"threeCheck": threeCheck}
+    return ratings
 
 def print_ratings(ratings_json):
     for k in ratings_json.keys():
-        print('**********'+k+'**********')
+        print('\n**********'+k+'**********')
         print(pd.DataFrame(data=ratings_json[k], columns=["Username", "Rating", "Games played"]))
 
 def export_ratings(ratings_json,format):
@@ -103,7 +76,7 @@ def export_ratings(ratings_json,format):
     header_game_mode=[]
     total_lines=0
     for k in ratings_json.keys():
-        header_game_mode.append(k)
+        header_game_mode.append(k.capitalize())
         header_game_mode.extend([""]*(len(header_generic)-1))
         header_data.extend(header_generic)
         if len(ratings_json[k]) > total_lines:
