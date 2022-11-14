@@ -54,9 +54,9 @@ def get_ratings(players_list):
         weird_avg/=weird_modes_cntr
         standard_avg/=std_modes_cntr
         all_avg/=all_modes_cntr
-        ratings['Super Champions'].append({"username":player['username'], "rating": all_avg, "games": all_games_cnt})
-        ratings['Standard Champions'].append({"username":player['username'], "rating": standard_avg, "games": standard_games_cnt})
-        ratings['Weird Champios'].append({"username":player['username'], "rating": weird_avg, "games": weird_games_cnt})
+        ratings['Super Champions'].append({"username":player['username'], "rating": round(all_avg), "games": all_games_cnt})
+        ratings['Standard Champions'].append({"username":player['username'], "rating": round(standard_avg), "games": standard_games_cnt})
+        ratings['Weird Champios'].append({"username":player['username'], "rating": round(weird_avg), "games": weird_games_cnt})
 
     for i in ratings.keys(): ratings[i] = sorted(ratings[i], key=lambda k: k['rating'], reverse=True)
     for i in ratings.keys(): ratings[i] = ratings2list(ratings[i])
