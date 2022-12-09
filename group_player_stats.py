@@ -22,9 +22,10 @@ def get_ratings(players_list):
     game_modes = []
     for player in players_list:
         for i in player['perfs'].keys():
-            if not i in game_modes:
+            if not i in game_modes and 'games' in player['perfs'][i]:
                 game_modes.append(i)
-                if i=='ultraBullet' or i=='bullet' or i=='blitz' or i=='rapid' or i=='classical' or i=='correspondence' or i=='puzzle':
+                print('game mode: ',i)
+                if i=='ultraBullet' or i=='bullet' or i=='blitz' or i=='rapid' or i=='classical' or i=='correspondence' or i=='puzzle' or i=='racer' or i=='streak':
                     std_modes_cntr+=1
     all_modes_cntr=len(game_modes)
     weird_modes_cntr=all_modes_cntr-std_modes_cntr
@@ -40,7 +41,7 @@ def get_ratings(players_list):
             # print(player['perfs'][i])
             if not 'games' in player['perfs'][i]:
                 continue
-            if i=='ultraBullet' or i=='bullet' or i=='blitz' or i=='rapid' or i=='classical' or i=='correspondence' or i=='puzzle':
+            if i=='ultraBullet' or i=='bullet' or i=='blitz' or i=='rapid' or i=='classical' or i=='correspondence' or i=='puzzle' or i=='racer' or i=='streak':
                 standard_games_cnt+=player['perfs'][i]['games']
                 standard_avg+=player['perfs'][i]['rating']
             else:
